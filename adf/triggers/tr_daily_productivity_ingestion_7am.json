@@ -1,0 +1,28 @@
+{
+    "name": "tr_daily_productivity_ingestion_7am",
+    "properties": {
+        "description": "Daily schedule trigger that runs the Productivity Monitor ingestion pipeline every day at 7:00 AM Colombia time. The pipeline ingests local CSV/JSON files into ADLS Gen2 Landing and then orchestrates the Databricks transformation notebooks.\n",
+        "annotations": [],
+        "runtimeState": "Stopped",
+        "pipelines": [
+            {
+                "pipelineReference": {
+                    "referenceName": "PL_Notebooks_Transform_Orchestration",
+                    "type": "PipelineReference"
+                },
+                "parameters": {
+                    "p_trigger_date": "@formatDateTime(addDays(convertFromUtc(trigger().scheduledTime,'SA Pacific Standard Time'),-1),'yyyy-MM-dd')"
+                }
+            }
+        ],
+        "type": "ScheduleTrigger",
+        "typeProperties": {
+            "recurrence": {
+                "frequency": "Day",
+                "interval": 1,
+                "startTime": "2026-06-27T07:00:00",
+                "timeZone": "SA Pacific Standard Time"
+            }
+        }
+    }
+}

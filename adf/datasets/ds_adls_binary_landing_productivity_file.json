@@ -1,0 +1,33 @@
+{
+    "name": "ds_adls_binary_landing_productivity_file",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "ls_adls_productivity_dev",
+            "type": "LinkedServiceReference"
+        },
+        "parameters": {
+            "p_folder_path": {
+                "type": "string"
+            },
+            "p_file_path": {
+                "type": "string"
+            }
+        },
+        "annotations": [],
+        "type": "Binary",
+        "typeProperties": {
+            "location": {
+                "type": "AzureBlobFSLocation",
+                "fileName": {
+                    "value": "@dataset().p_file_path",
+                    "type": "Expression"
+                },
+                "folderPath": {
+                    "value": "@dataset().p_folder_path",
+                    "type": "Expression"
+                }
+            }
+        }
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}

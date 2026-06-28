@@ -1,0 +1,250 @@
+{
+    "name": "PL_Ingest_ProductivityMonitor_DailyFile",
+    "properties": {
+        "activities": [
+            {
+                "name": "GM_Get_Local_Files",
+                "type": "GetMetadata",
+                "dependsOn": [
+                    {
+                        "activity": "SET_in_file_Date",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "dataset": {
+                        "referenceName": "ds_local_binary_productivity_folder",
+                        "type": "DatasetReference"
+                    },
+                    "fieldList": [
+                        "childItems"
+                    ],
+                    "storeSettings": {
+                        "type": "FileServerReadSettings",
+                        "recursive": true,
+                        "enablePartitionDiscovery": false
+                    },
+                    "formatSettings": {
+                        "type": "BinaryReadSettings"
+                    }
+                }
+            },
+            {
+                "name": "FLT_Only_CSV_JSON",
+                "type": "Filter",
+                "dependsOn": [
+                    {
+                        "activity": "GM_Get_Local_Files",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "userProperties": [],
+                "typeProperties": {
+                    "items": {
+                        "value": "@activity('GM_Get_Local_Files').output.childItems",
+                        "type": "Expression"
+                    },
+                    "condition": {
+                        "value": "@and(equals(item().type,'File'),or(equals(toLower(item().name),concat('productivity_',variables('v_in_file_date'),'.csv')),equals(toLower(item().name),concat('productivity_',variables('v_in_file_date'),'.json'))))",
+                        "type": "Expression"
+                    }
+                }
+            },
+            {
+                "name": "IF_FILE_EXIST",
+                "type": "IfCondition",
+                "dependsOn": [
+                    {
+                        "activity": "FLT_Only_CSV_JSON",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "userProperties": [],
+                "typeProperties": {
+                    "expression": {
+                        "value": "@greater(length(activity('FLT_Only_CSV_JSON').output.Value),0)",
+                        "type": "Expression"
+                    },
+                    "ifFalseActivities": [
+                        {
+                            "name": "F_Missing_File",
+                            "type": "Fail",
+                            "dependsOn": [],
+                            "userProperties": [],
+                            "typeProperties": {
+                                "message": "Expected Productivity Monitor file was not found for the selected process date.",
+                                "errorCode": "PRODUCTIVITY_FILE_NOT_FOUND"
+                            }
+                        }
+                    ],
+                    "ifTrueActivities": [
+                        {
+                            "name": "W_5segs",
+                            "type": "Wait",
+                            "dependsOn": [],
+                            "userProperties": [],
+                            "typeProperties": {
+                                "waitTimeInSeconds": 5
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "FE_COPY_DATA",
+                "type": "ForEach",
+                "dependsOn": [
+                    {
+                        "activity": "IF_FILE_EXIST",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "userProperties": [],
+                "typeProperties": {
+                    "items": {
+                        "value": "@activity('FLT_Only_CSV_JSON').output.value\r\n",
+                        "type": "Expression"
+                    },
+                    "activities": [
+                        {
+                            "name": "CD_LOCALFILES_TO_ADLS",
+                            "type": "Copy",
+                            "dependsOn": [],
+                            "policy": {
+                                "timeout": "0.12:00:00",
+                                "retry": 0,
+                                "retryIntervalInSeconds": 30,
+                                "secureOutput": false,
+                                "secureInput": false
+                            },
+                            "userProperties": [],
+                            "typeProperties": {
+                                "source": {
+                                    "type": "BinarySource",
+                                    "storeSettings": {
+                                        "type": "FileServerReadSettings",
+                                        "recursive": true
+                                    },
+                                    "formatSettings": {
+                                        "type": "BinaryReadSettings"
+                                    }
+                                },
+                                "sink": {
+                                    "type": "BinarySink",
+                                    "storeSettings": {
+                                        "type": "AzureBlobFSWriteSettings"
+                                    }
+                                },
+                                "enableStaging": false
+                            },
+                            "inputs": [
+                                {
+                                    "referenceName": "ds_local_binary_productivity_file",
+                                    "type": "DatasetReference",
+                                    "parameters": {
+                                        "p_file_name": {
+                                            "value": "@item().name",
+                                            "type": "Expression"
+                                        }
+                                    }
+                                }
+                            ],
+                            "outputs": [
+                                {
+                                    "referenceName": "ds_adls_binary_landing_productivity_file",
+                                    "type": "DatasetReference",
+                                    "parameters": {
+                                        "p_folder_path": {
+                                            "value": "productivity/landing/source=desktop_app/ingest_date=@{formatDateTime(convertFromUtc(utcNow(),'SA Pacific Standard Time'),'yyyy-MM-dd')}",
+                                            "type": "Expression"
+                                        },
+                                        "p_file_path": {
+                                            "value": "@item().name",
+                                            "type": "Expression"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "SET_in_file_Date",
+                "type": "SetVariable",
+                "dependsOn": [],
+                "policy": {
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "variableName": "v_in_file_date",
+                    "value": {
+                        "value": "@if(\n    empty(pipeline().parameters.p_in_file_date),\n    formatDateTime(addDays(convertFromUtc(utcNow(),'SA Pacific Standard Time'),-1),'yyyy-MM-dd'),\n    pipeline().parameters.p_in_file_date\n)",
+                        "type": "Expression"
+                    }
+                }
+            },
+            {
+                "name": "SET_Return_Variable",
+                "type": "SetVariable",
+                "dependsOn": [
+                    {
+                        "activity": "FE_COPY_DATA",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "variableName": "pipelineReturnValue",
+                    "value": [
+                        {
+                            "key": "v_rtn_file_date",
+                            "value": {
+                                "type": "Expression",
+                                "content": "@variables('v_in_file_date')"
+                            }
+                        }
+                    ],
+                    "setSystemVariable": true
+                }
+            }
+        ],
+        "parameters": {
+            "p_in_file_date": {
+                "type": "string"
+            }
+        },
+        "variables": {
+            "v_in_file_date": {
+                "type": "String"
+            }
+        },
+        "annotations": [],
+        "lastPublishTime": "2026-06-27T05:25:18Z"
+    },
+    "type": "Microsoft.DataFactory/factories/pipelines"
+}

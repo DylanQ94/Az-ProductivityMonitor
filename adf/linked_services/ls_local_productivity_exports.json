@@ -1,0 +1,17 @@
+{
+    "name": "ls_local_productivity_exports",
+    "type": "Microsoft.DataFactory/factories/linkedservices",
+    "properties": {
+        "annotations": [],
+        "type": "FileServer",
+        "typeProperties": {
+            "host": "C:\\ProductivityMonitor\\Reports",
+            "userId": "kikodesktop\\dilan quintero e",
+            "encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiIxNDgwODI4YS00Mzg2LTQzOGUtYTI5Ni1jZDAxNTRmOGZjNDEiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+        },
+        "connectVia": {
+            "referenceName": "shir-productivity-monitor-dev",
+            "type": "IntegrationRuntimeReference"
+        }
+    }
+}

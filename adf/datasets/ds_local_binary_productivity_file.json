@@ -1,0 +1,26 @@
+{
+    "name": "ds_local_binary_productivity_file",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "ls_local_productivity_exports",
+            "type": "LinkedServiceReference"
+        },
+        "parameters": {
+            "p_file_name": {
+                "type": "string"
+            }
+        },
+        "annotations": [],
+        "type": "Binary",
+        "typeProperties": {
+            "location": {
+                "type": "FileServerLocation",
+                "fileName": {
+                    "value": "@dataset().p_file_name",
+                    "type": "Expression"
+                }
+            }
+        }
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,14 @@
+{
+    "name": "ls_databricks_productivity_dev",
+    "type": "Microsoft.DataFactory/factories/linkedservices",
+    "properties": {
+        "annotations": [],
+        "type": "AzureDatabricks",
+        "typeProperties": {
+            "domain": "https://adb-7405613368160262.2.azuredatabricks.net",
+            "authentication": "MSI",
+            "workspaceResourceId": "/subscriptions/59ddec9c-7fd3-4a7a-a733-a204eab5e76c/resourceGroups/rg-ProductivityMonitor-dev/providers/Microsoft.Databricks/workspaces/dbks-productivitymonitor-dev",
+            "existingClusterId": "0602-174127-tlawg04i"
+        }
+    }
+}

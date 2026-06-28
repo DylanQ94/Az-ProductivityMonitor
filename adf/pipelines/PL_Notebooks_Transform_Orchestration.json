@@ -1,0 +1,99 @@
+{
+    "name": "PL_Notebooks_Transform_Orchestration",
+    "properties": {
+        "activities": [
+            {
+                "name": "EP_PL_Ingest_ProductivityMonitor_DailyFile",
+                "type": "ExecutePipeline",
+                "dependsOn": [],
+                "policy": {
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "PL_Ingest_ProductivityMonitor_DailyFile",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true,
+                    "parameters": {
+                        "p_in_file_date": {
+                            "value": "@pipeline().parameters.p_trigger_date",
+                            "type": "Expression"
+                        }
+                    }
+                }
+            },
+            {
+                "name": "00_orchestrate_transformations",
+                "type": "DatabricksNotebook",
+                "dependsOn": [
+                    {
+                        "activity": "SET_v_file_date",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "notebookPath": "/Users/dylanquintero11@gmail.com/Notebooks/00_orchestrate_transformations",
+                    "baseParameters": {
+                        "p_file_date": {
+                            "value": "@variables('v_file_date')",
+                            "type": "Expression"
+                        }
+                    }
+                },
+                "linkedServiceName": {
+                    "referenceName": "ls_databricks_productivity_dev",
+                    "type": "LinkedServiceReference"
+                }
+            },
+            {
+                "name": "SET_v_file_date",
+                "type": "SetVariable",
+                "dependsOn": [
+                    {
+                        "activity": "EP_PL_Ingest_ProductivityMonitor_DailyFile",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "variableName": "v_file_date",
+                    "value": {
+                        "value": "@activity('EP_PL_Ingest_ProductivityMonitor_DailyFile').output.pipelineReturnValue.v_rtn_file_date",
+                        "type": "Expression"
+                    }
+                }
+            }
+        ],
+        "parameters": {
+            "p_trigger_date": {
+                "type": "string"
+            }
+        },
+        "variables": {
+            "v_file_date": {
+                "type": "String"
+            }
+        },
+        "annotations": [],
+        "lastPublishTime": "2026-06-27T13:32:23Z"
+    },
+    "type": "Microsoft.DataFactory/factories/pipelines"
+}
