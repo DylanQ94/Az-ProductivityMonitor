@@ -238,16 +238,3 @@ Aggregated facts are built from `fact_productivity_interval` to ensure that all 
 At the end of this phase, Databricks produced a curated Gold Delta Lake model ready to be exposed through a SQL serving layer.
 
 The next phase creates Synapse Serverless SQL views over the Gold Delta folders so they can be consumed by analytical tools.
-
-## Pending Confirmation
-
-The following details were not confirmed in the provided summary:
-
-- Databricks workspace name.
-- Cluster name.
-- Notebook names.
-- Exact ADLS access method.
-- Exact database, catalog, or schema names, if any.
-- Whether Unity Catalog was used in this project.
-- Exact table registration method, if any.
-- Final correction of the Landing path convention: `source=desktop_app` versus `source-desktop_app`.

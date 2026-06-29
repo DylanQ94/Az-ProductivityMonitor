@@ -26,19 +26,10 @@ Gold Analytical Delta Layer
 Azure Synapse Analytics Serverless SQL
         ↓
 SQL Views
-        ↓
-Reporting / consumption layer
 ```
 
 ## Architecture Diagram
 
-Aquí va una imagen.
-
-Suggested image path:
-
-```text
-assets/images/architecture.png
-```
 
 ## Layer Responsibilities
 
@@ -143,8 +134,6 @@ ADLS Gen2 Gold Delta folders
 Azure Synapse Analytics Serverless SQL
         ↓
 SQL views
-        ↓
-Reporting / consumption layer
 ```
 
 ## Why This Architecture Was Used
@@ -157,14 +146,3 @@ This architecture was selected because it provides a clear separation of concern
 - Synapse Serverless SQL exposes curated files using SQL without provisioning a dedicated warehouse.
 
 For a portfolio project, this architecture also helps demonstrate common Azure data engineering patterns, including local ingestion, Medallion layers, Delta Lake processing, and SQL-based serving over the lake.
-
-## Items Not Created
-
-The following components were not created or were not confirmed in the current scope:
-
-- Dedicated SQL Pool.
-- Synapse external tables.
-- CETAS outputs.
-- Materialized serving tables.
-- Final Power BI dashboard.
-- Power BI DAX measures.

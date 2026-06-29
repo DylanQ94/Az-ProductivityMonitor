@@ -28,23 +28,18 @@ ADF is responsible only for raw file movement. Parsing, schema enforcement, clea
 
 ## Pipeline
 
-The pipeline created for this phase is:
+The pipelines created for this phase are:
 
 ```text
 PL_Ingest_ProductivityMonitor_DailyFile
 ```
 
-The pipeline uses the following activity flow:
+![ADF ingestion pipeline flow](../assets/images/PL_Ingest_ProductivityMonitor_DailyFile.png)
 
 ```text
-Get Metadata
-    ↓
-Filter
-    ↓
-ForEach
-    ↓
-Copy Data
+PL_Notebooks_Transform_Orchestration
 ```
+![ADF ingestion pipeline flow](../assets/images/PL_Notebooks_Transform_Orchestration.png)
 
 ## Source
 
@@ -79,30 +74,6 @@ productivity/productivity-monitor/landing/source=desktop_app/ingest_date=2026-06
 
 Each ingested file is stored under a date-partitioned Landing folder using the Colombia local date derived from the pipeline execution time.
 
-## Activity Details
-
-### Get Metadata
-
-The `Get Metadata` activity lists the files available in the local source folder.
-
-A folder-level Binary dataset is used for this step because the `childItems` field is required to retrieve the files contained in the directory.
-
-### Filter
-
-The `Filter` activity keeps only valid files with `.csv` or `.json` extensions.
-
-This prevents unsupported files or folders from being processed by the ingestion pipeline.
-
-### ForEach
-
-The `ForEach` activity iterates over the filtered file list.
-
-### Copy Data
-
-The `Copy Data` activity copies each file individually into ADLS Gen2.
-
-A file-level parameterized dataset is used so the current file name from the `ForEach` loop can be passed to the dataset.
-
 ## Dataset Design
 
 Binary datasets were used because Data Factory is only responsible for moving the raw files as-is.
@@ -123,17 +94,6 @@ The Copy Data source receives the current file name from the `ForEach` loop usin
 ```text
 @item().name
 ```
-
-## Issues Resolved
-
-During implementation, the following issues were resolved:
-
-- `childItems` was not available when the dataset pointed to a file instead of a folder.
-- A separate folder-level dataset was required for `Get Metadata`.
-- A separate file-level parameterized dataset was required for `Copy Data`.
-- The Copy Data activity initially failed because ADF interpreted the source as a folder instead of a specific file.
-- The file name parameter had to be correctly assigned to the dataset `File name` property using `@dataset().p_file_name`.
-- The Copy Data source had to receive the current file name from the `ForEach` loop using `@item().name`.
 
 ## Final Status
 

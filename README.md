@@ -18,16 +18,6 @@ Implemented:
 - Gold analytical model with fact and dimension tables.
 - Azure Synapse Analytics Serverless SQL serving layer.
 - SQL views over Gold Delta Lake folders.
-- Power BI connection validation through the Synapse Serverless SQL endpoint.
-
-Not implemented or not confirmed:
-
-- Dedicated SQL Pool.
-- Synapse external tables.
-- CETAS outputs.
-- Materialized serving tables in Synapse.
-- Final Power BI dashboard pages or DAX measures.
-- Final execution and row count validation for all Synapse views.
 
 ## Data Source
 
@@ -72,8 +62,6 @@ Bronze / Silver / Gold Delta Layers
 Azure Synapse Analytics Serverless SQL
         ↓
 SQL Views
-        ↓
-Reporting / consumption layer
 ```
 
 ## Main Technologies
@@ -86,7 +74,6 @@ Reporting / consumption layer
 - Delta Lake
 - Azure Synapse Analytics Serverless SQL
 - T-SQL
-- Power BI, connection validation only
 
 ## Repository Structure
 
@@ -100,18 +87,19 @@ Reporting / consumption layer
 │   ├── 04_databricks_processing.md
 │   ├── 05_synapse_serving_layer.md
 │   ├── 06_data_model.md
-│   ├── 07_results_and_conclusions.md
-│   └── 08_pending_powerbi.md
+│   └── 07_results_and_conclusions.md
 ├── adf/
 │   ├── pipelines/
-│   └── datasets/
+│   ├── datasets/
+│   ├── linked_services/
+│   └── triggers/
 ├── databricks/
 │   └── notebooks/
 ├── synapse/
 │   └── sql/
-├── assets/
-│   └── images/
-└── .gitignore
+└── assets/
+    └── images/
+
 ```
 
 ## Documentation
@@ -123,7 +111,6 @@ Reporting / consumption layer
 - [05 Synapse Serving Layer](docs/05_synapse_serving_layer.md)
 - [06 Gold Data Model](docs/06_data_model.md)
 - [07 Results and Conclusions](docs/07_results_and_conclusions.md)
-- [08 Pending Power BI](docs/08_pending_powerbi.md)
 
 ## Final State
 
@@ -132,5 +119,3 @@ The project currently exposes curated Gold Delta Lake data through Synapse Serve
 ## Notes
 
 This project was built for learning and portfolio purposes. The architecture intentionally separates ingestion, processing, storage, and serving responsibilities to practice realistic Azure data engineering patterns.
-
-A minor path naming difference exists between the ADF and Databricks summaries. The ADF Landing path uses `source=desktop_app`, while the Databricks summary mentions `source-desktop_app`. The final path convention should be confirmed before closing the repository documentation.

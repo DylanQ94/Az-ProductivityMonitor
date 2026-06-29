@@ -22,7 +22,6 @@ The current documented scope covers:
 - Bronze, Silver, and Gold processing with Azure Databricks.
 - Delta Lake analytical modeling.
 - Synapse Serverless SQL views over Gold Delta folders.
-- Power BI connection validation through the Synapse Serverless SQL endpoint.
 
 The current documented scope does not include a final Power BI report, dashboard design, DAX measures, or published semantic model.
 

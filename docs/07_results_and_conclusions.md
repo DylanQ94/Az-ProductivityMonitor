@@ -31,7 +31,6 @@ The final result is a curated Gold Delta Lake analytical model exposed through A
 - External data source `GoldLake` was created for the Gold layer.
 - SQL views were designed over Gold fact and dimension folders.
 - The Serverless SQL endpoint was identified for downstream consumption.
-- Power BI connection was validated using Microsoft account authentication.
 
 ## Key Technical Learning
 
@@ -41,29 +40,24 @@ The source files contain cumulative duration counters, so directly summing those
 
 To solve this, the Gold layer calculates real duration increments using window functions and `lag()`. All aggregated facts are then built from this validated interval logic.
 
-## What Was Intentionally Not Created
-
-The following components were not created in the confirmed scope:
-
-- Dedicated SQL Pool.
-- Synapse external tables.
-- CETAS outputs.
-- Materialized Synapse serving tables.
-- Final Power BI dashboard.
-- DAX measures.
-
-## Pending Items
-
-The following items remain pending confirmation:
-
-- Final execution validation of all Synapse fact and dimension views.
-- Final row count validation for all exposed Gold views.
-- Final Landing path naming convention between `source=desktop_app` and `source-desktop_app`.
-- Optional improvement: define explicit SQL columns and data types instead of using `SELECT *` in Synapse views.
-- Final Power BI semantic model and dashboard design.
-
 ## Conclusion
 
-The project successfully demonstrates a realistic Azure data engineering architecture for local productivity monitoring data.
+The project successfully demonstrates a realistic Azure data engineering architecture for local productivity monitoring data that a allow to make conclusions with their views, for example:
 
-It separates ingestion, processing, storage, modeling, and serving responsibilities across Azure services, while keeping the implementation focused and avoiding unnecessary persisted serving copies.
+## Analysis by Day of the Week
+
+| Day       | Active Days | Session h | Productive h | Productive Ratio | Inactive Ratio |
+| --------- | ----------: | --------: | -----------: | ---------------: | -------------: |
+| Monday    |           7 |     37.02 |        26.61 |            71.9% |          17.8% |
+| Tuesday   |           7 |     43.98 |        32.61 |            74.1% |          16.2% |
+| Wednesday |           7 |     50.54 |        34.61 |            68.5% |          18.7% |
+| Thursday  |           6 |     21.15 |        13.92 |            65.8% |          15.0% |
+| Friday    |           6 |     41.76 |        30.98 |            74.2% |          13.6% |
+| Saturday  |           5 |     19.02 |        12.35 |            64.9% |          17.6% |
+| Sunday    |           6 |     18.24 |        13.50 |            74.0% |          16.3% |
+
+**Key insight:**
+
+**Friday and Tuesday** show the highest productivity ratios, both close to **74%**.
+**Wednesday** concentrates the highest total session hours, but it also shows one of the highest inactive ratios.
+

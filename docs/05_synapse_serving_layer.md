@@ -8,8 +8,6 @@ The purpose of this phase was to expose the curated Gold layer stored in Azure D
 
 Synapse Serverless SQL provides a lightweight query layer over the Gold Delta Lake folders generated in the previous processing stage.
 
-This phase focuses only on data serving and SQL-based access to the Gold layer. No Dedicated SQL Pool, external tables, CETAS outputs, or materialized serving tables were created.
-
 ## Role in the Architecture
 
 Synapse Serverless SQL sits between the Gold layer in ADLS Gen2 and the consumption layer.
@@ -46,12 +44,6 @@ External data source:
 
 ```text
 GoldLake
-```
-
-External data source location:
-
-```text
-https://saproductivitymonitor.dfs.core.windows.net/productivity/gold/
 ```
 
 Database scoped credential:

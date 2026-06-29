@@ -172,11 +172,6 @@ inactive_duration = session_duration - attentive_duration - productive_duration
 
 The use of `fact_productivity_interval` as the source for aggregated fact tables ensures that all duration metrics are calculated consistently.
 
-## Design Decisions
-
-A productivity-state dimension and an activity-state record fact were considered during the design process.
-
-They were removed from the final model because the project prioritizes duration-based productivity analysis over record-count-based state analysis.
 
 ## Serving Views
 
