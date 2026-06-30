@@ -30,6 +30,7 @@ SQL Views
 
 ## Architecture Diagram
 
+![Extended_rchitecture_diagram_project](../assets/images/extended_architecture_diagram_project.png)
 
 ## Layer Responsibilities
 

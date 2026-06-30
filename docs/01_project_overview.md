@@ -23,8 +23,6 @@ The current documented scope covers:
 - Delta Lake analytical modeling.
 - Synapse Serverless SQL views over Gold Delta folders.
 
-The current documented scope does not include a final Power BI report, dashboard design, DAX measures, or published semantic model.
-
 ## Main Components
 
 | Component | Role |
@@ -36,7 +34,6 @@ The current documented scope does not include a final Power BI report, dashboard
 | Azure Databricks | Processes raw files into curated Delta Lake tables. |
 | Delta Lake | Provides the storage format for processed lakehouse layers. |
 | Azure Synapse Serverless SQL | Exposes Gold Delta folders through SQL views. |
-| Power BI | Validated as a possible downstream consumption tool. |
 
 ## Source Data
 

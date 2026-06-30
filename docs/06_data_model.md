@@ -60,18 +60,6 @@ Daily aggregation of productivity duration metrics.
 
 Main metrics:
 
-```text
-total_session_hours
-total_attentive_hours
-total_productive_hours
-total_inactive_hours
-total_active_hours
-attentive_ratio
-productive_ratio
-inactive_ratio
-active_ratio
-```
-
 ### fact_productivity_monthly
 
 Monthly aggregation of productivity duration metrics.

@@ -26,20 +26,20 @@ ADLS Gen2 Landing zone
 
 ADF is responsible only for raw file movement. Parsing, schema enforcement, cleansing, casting, and analytical transformations are handled downstream in Databricks.
 
-## Pipeline
+## Pipelines
 
 The pipelines created for this phase are:
 
 ```text
-PL_Ingest_ProductivityMonitor_DailyFile
+PL_Ingest_ProductivityMonitor_DailyFile:
 ```
 
-![ADF ingestion pipeline flow](../assets/images/PL_Ingest_ProductivityMonitor_DailyFile.png)
+![ADF PL_Ingest_ProductivityMonitor_DailyFile](../assets/images/PL_Ingest_ProductivityMonitor_DailyFile.png)
 
 ```text
-PL_Notebooks_Transform_Orchestration
+PL_Notebooks_Transform_Orchestration:
 ```
-![ADF ingestion pipeline flow](../assets/images/PL_Notebooks_Transform_Orchestration.png)
+![ADF PL_Notebooks_Transform_Orchestration](../assets/images/PL_Notebooks_Transform_Orchestration.png)
 
 ## Source
 
@@ -100,15 +100,3 @@ The Copy Data source receives the current file name from the `ForEach` loop usin
 The final state of this phase is that files generated locally by the Productivity Monitor application are successfully copied into the ADLS Gen2 Landing zone.
 
 This completes the ingestion layer and prepares the raw data for downstream processing in the lakehouse.
-
-## Pending Confirmation
-
-The following implementation details were not confirmed in the provided summary:
-
-- ADF resource name.
-- Linked service names.
-- Dataset names.
-- Self-hosted Integration Runtime name.
-- Storage linked service name.
-- Trigger configuration.
-- Exported ADF ARM template or individual pipeline JSON files.

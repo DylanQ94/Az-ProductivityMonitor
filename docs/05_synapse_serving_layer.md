@@ -136,24 +136,6 @@ SQL views were used instead of external tables or CETAS outputs because the goal
 
 No external tables, CETAS outputs, dedicated SQL pools, or materialized Synapse tables were created in this phase.
 
-## Issues Resolved
-
-During implementation, Synapse initially failed to list the Delta transaction log folder (`_delta_log`).
-
-The Delta folders were confirmed to exist in ADLS Gen2, and the Synapse workspace Managed Identity already had the required storage role assignment.
-
-The root cause was an incorrect external data source URL that still contained placeholder characters.
-
-The location was corrected from a placeholder-based path to the real ADLS Gen2 URL:
-
-```text
-https://saproductivitymonitor.dfs.core.windows.net/productivity/gold/
-```
-
-After correcting the path, the external data source was properly associated with the `SynapseWorkspaceIdentity` Managed Identity.
-
-Another issue occurred when connecting from Power BI using Windows authentication. The correct authentication method for the Synapse Serverless SQL endpoint was Microsoft account authentication.
-
 ## Final Status
 
 The Synapse Analytics serving layer was configured successfully as a SQL access layer over the Gold Delta Lake folders in ADLS Gen2.
@@ -166,9 +148,3 @@ Completed items:
 - SQL views designed over Gold fact and dimension folders.
 - Serverless endpoint identified for downstream consumption.
 - Power BI connection validated through the Synapse Serverless SQL endpoint.
-
-## Pending Confirmation
-
-- Final execution validation of all fact and dimension views.
-- Final row count validation for all exposed Gold views.
-- Optional future improvement: define explicit SQL columns and data types instead of using `SELECT *` in the views.
